@@ -1,0 +1,34 @@
+SC3103 Lab 2 Notes
+
+General Reminders:
+1. Initialised hardware need to put in system.c
+2. new c and h files need to include in system.h
+3. need to create task in main.c
+
+Practice A:
+
+1. initialise button (button_Init)
+2. declare song and notes as global vars
+3. create button task function (similar to buzz task and led task in lab 1)
+	- this is done by polling so need keep polling button
+	- button = GPIO_ReadInputDataBit(BUTTON_PORT, BUTTON_PIN) in while loop
+
+
+Practice B:
+- basically need change led to be managed by freeRTOS sw timer service, dont need to manage timing manually
+TIMERTASK = xTimerCreate("led_task", F2T(RATE_1_HZ), pdTRUE, 0, led_task);
+F2T(RATE_1_HZ): specifiy timer period in tick periods - CHECK
+pdTRUE: timer should auto-reload upon expiration
+0 is the timer ID
+led task is the call back function that freeRTOS will call when timer expires
+
+
+
+if(xTimerStart(TIMERTASK,0) == pdPASS)
+0 means high priority, function will return immediately if command queue is full
+return pdPASS if start command sent to timer command queue successfully
+
+
+Practice C:
+
+1. Buad Rate declare in the init for uart

@@ -1,0 +1,30 @@
+CC=gcc
+CFLAGS=-Wall
+DFLAGS=-g  # Debug flag
+PFLAGS=-pg # Profiling flag for GPROF
+SRCS=hello-main.c hello-funct1.c hello-funct2.c # Added hello-funct1.c to the source list
+OBJS=$(SRCS:.c=.o)
+MAIN=hello
+DEBUG_MAIN=helloworld-d
+
+.PHONY: clean debug profile
+
+all: $(MAIN)
+
+debug: DFLAGS += $(PFLAGS) # Include profiling in debug build if needed
+debug: $(DEBUG_MAIN)
+
+$(MAIN): $(OBJS)
+	$(CC) $(CFLAGS) $(PFLAGS) -o $(MAIN) $(OBJS) # Include profiling flag
+	@echo "Regular executable generated: $(MAIN)"
+
+$(DEBUG_MAIN): $(OBJS)
+	$(CC) $(CFLAGS) $(DFLAGS) -o $(DEBUG_MAIN) $(OBJS)
+	@echo "Debug executable generated: $(DEBUG_MAIN)"
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f *.o $(MAIN) $(DEBUG_MAIN) gmon.out
+
